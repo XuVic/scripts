@@ -2,7 +2,7 @@ function install_db
 {
     if [ "$1" == "sqlite" ]; then
         sudo apt-get update
-        sudo apt-get install -y sqlite3 libsqlite3-dev libsqlite3-ruby python-pysqlite2
+        sudo apt-get install -y sqlite3 libsqlite3-dev
         sqlite3 -version
     elif [ "$1" == "pg" ]; then
         sudo apt-get update
@@ -13,7 +13,7 @@ function install_db
         sudo apt-get install mysql-server
         mysql_secure_installation
         systemctl status mysql.service
-    elif [ "$1" == "redis" ]
+    elif [ "$1" == "redis" ]; then
         sudo apt-get update
         sudo apt-get install build-essential tcl
         cd /tmp
@@ -35,6 +35,20 @@ function install_server
         sudo ufw allow 'Nginx HTTP'
         sudo systemctl status nginx
     fi
+}
+
+function install_other
+{
+    if [ "$1" == "docker" ]; then
+        sudo apt-get update
+        sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+        sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu  $(lsb_release -cs)  stable" 
+        sudo apt-get update
+        sudo apt-get install docker-ce
+        sudo usermod -a -G docker $USER
+        docker -v
+    fimvn
 }
 
 if [ "$1" == "sqlite" ] || [ "$1" == "pg" ]; then
